@@ -1,20 +1,28 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import React from 'react';
+import { NavigationContainer } from '@react-navigation/native';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { GameProvider, useGame } from './context/GameContext';
+import { AppNavigator } from './navigation/AppNavigator';
+
+function AppContent() {
+  const { isLoaded } = useGame();
+
+  if (!isLoaded) {
+    // Delay rendering until user progress is successfully loaded from AsyncStorage
+    return null;
+  }
+
+  return <AppNavigator />;
+}
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <SafeAreaProvider>
+      <GameProvider>
+        <NavigationContainer>
+          <AppContent />
+        </NavigationContainer>
+      </GameProvider>
+    </SafeAreaProvider>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
